@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: flash-arena-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - flash-network
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: flash-arena-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - flash-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: flash-arena-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongodb:27017/flash_arena
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=super_secret_access_token_key_12345
+      - JWT_REFRESH_SECRET=super_secret_refresh_token_key_67890
+      - FRONTEND_URL=http://localhost:3000
+      - INITIAL_COINS=1000
+      - DEFAULT_COMMISSION=10
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - flash-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flash-arena-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+      - NEXT_PUBLIC_WS_URL=http://localhost:5000
+    depends_on:
+      - backend
+    networks:
+      - flash-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  flash-network:
+    driver: bridge
