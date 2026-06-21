@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSocket } from '../../context/SocketContext';
+import { useSocket } from '../../../context/SocketContext';
 import { motion } from 'framer-motion';
 import { ArrowLeft, TrendingUp, Users } from 'lucide-react';
 

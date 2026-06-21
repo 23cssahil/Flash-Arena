@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { motion } from 'framer-motion';
 import { TrendingUp, Trophy, Zap, Award, Coins, Users, Play, History } from 'lucide-react';
 
