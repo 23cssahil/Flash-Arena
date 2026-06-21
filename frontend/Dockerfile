@@ -23,7 +23,7 @@ RUN npm ci --only=production
 
 COPY --from=builder /usr/src/app/.next ./.next
 COPY --from=builder /usr/src/app/public ./public
-COPY --from=builder /usr/src/app/next.config.js ./next.config.js || true
+COPY --from=builder /usr/src/app/next.config.js ./next.config.js
 
 EXPOSE 3000
 
